@@ -25,7 +25,6 @@ class Creature extends SoftBody {
   double MAX_VISION_DISTANCE = 10;
   final double STARTING_AXON_VARIABILITY = 1.0;
   final double FOOD_SENSITIVITY = 0.3;
-  final double MAX_DETAILED_ZOOM = 3.5; // Maximum zoom to draw details at
   double[] visionAngles = {0, -0.4, 0.4};
   double[] visionDistances = {0, 0.7, 0.7};
   //double visionAngle;
@@ -228,7 +227,7 @@ class Creature extends SoftBody {
   public void drawSoftBody(float scaleUp, float camZoom, boolean showVision) {
     ellipseMode(RADIUS);
     double radius = getRadius();
-    if (showVision && camZoom > MAX_DETAILED_ZOOM) {
+    if (showVision && camZoom > Board.MAX_DETAILED_ZOOM) {
       drawVisionAngles(board, scaleUp);
     }
     noStroke();
@@ -245,7 +244,7 @@ class Creature extends SoftBody {
     }
     super.drawSoftBody(scaleUp);
 
-    if (camZoom > MAX_DETAILED_ZOOM) {
+    if (camZoom > Board.MAX_DETAILED_ZOOM) {
       drawMouth(board, scaleUp, radius, rotation, camZoom, mouthHue);
       if (showVision) {
         fill(0, 0, 1);
