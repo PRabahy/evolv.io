@@ -10,6 +10,8 @@ class Creature extends SoftBody {
   double FIGHT_ENERGY = 0.06;
   double INJURED_ENERGY = 0.25;
   double METABOLISM_ENERGY = 0.004;
+  double ADJUST_MOUTH_HUE_ENERGY = .01;
+  double ADJUST_BODY_HUE_ENERGY = .01;
   double AGE_FACTOR = 1; // 0 no ageing
   double currentEnergy;
   final int ENERGY_HISTORY_LENGTH = 6;
@@ -190,7 +192,7 @@ class Creature extends SoftBody {
     }
     if (useOutput) {
       int end = BRAIN_WIDTH - 1;
-      hue = Math.abs(neurons[end][0]) % 1.0;
+      adjustBodyHue(neurons[end][0], timeStep);
       accelerate(neurons[end][1], timeStep);
       turn(neurons[end][2], timeStep);
       eat(neurons[end][3], timeStep);
@@ -198,7 +200,7 @@ class Creature extends SoftBody {
       if (neurons[end][5] > 0 && board.year-birthTime >= MATURE_AGE && energy > SAFE_SIZE) {
         reproduce(SAFE_SIZE, timeStep);
       }
-      mouthHue = Math.abs(neurons[end][10]) % 1.0;
+      adjustMouthHue(neurons[end][10], timeStep);
       for (int i = 0; i < MEMORY_COUNT; i++) {
         memories[i] = neurons[end][11 + i];
       }
@@ -371,6 +373,18 @@ class Creature extends SoftBody {
     } else {
       fightLevel = 0;
     }
+  }
+  
+  public void adjustMouthHue(double newValue, double timeStep) {
+    newValue = Math.abs(newValue) % 1.0;
+    loseEnergy(Math.abs(mouthHue - newValue) * ADJUST_MOUTH_HUE_ENERGY * timeStep);
+    mouthHue = newValue;
+  }
+  
+  public void adjustBodyHue(double newValue, double timeStep) {
+    newValue = Math.abs(newValue) % 1.0;
+    loseEnergy(Math.abs(hue - newValue) * ADJUST_BODY_HUE_ENERGY * timeStep);
+    hue = newValue;
   }
 
   public void loseEnergy(double energyLost) {
