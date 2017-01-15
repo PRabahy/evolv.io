@@ -126,15 +126,13 @@ class Creature extends SoftBody {
 
 		if (useOutput) {
 			double[] output = brain.outputs();
-			hue = Math.abs(output[0]) % 1.0f;
-			accelerate(output[1], timeStep);
-			turn(output[2], timeStep);
-			eat(output[3], timeStep);
-			fight(output[4], timeStep * 100);
-			if (output[5] > 0 && board.year - birthTime >= MATURE_AGE && energy > SAFE_SIZE) {
-				reproduce(SAFE_SIZE, timeStep);
-			}
-			mouthHue = Math.abs(output[10]) % 1.0f;
+			new CreatureAction.AdjustHue().doAction(this, output[0], timeStep);
+			new CreatureAction.Accelerate().doAction(this, output[1], timeStep);
+			new CreatureAction.Rotate().doAction(this, output[2], timeStep);
+			new CreatureAction.Eat().doAction(this, output[3], timeStep);
+			new CreatureAction.Fight().doAction(this, output[4], timeStep);
+			new CreatureAction.Reproduce().doAction(this, output[5], timeStep);
+			new CreatureAction.AdjustMouthHue().doAction(this, output[10], timeStep);
 		}
 	}
 
@@ -241,7 +239,7 @@ class Creature extends SoftBody {
 		}
 	}
 
-	public void turn(double amount, double timeStep) {
+	public void rotate(double amount, double timeStep) {
 		vr += 0.04f * amount * timeStep / getMass();
 		loseEnergy(Math.abs(amount * TURN_ENERGY * energy * timeStep));
 	}
