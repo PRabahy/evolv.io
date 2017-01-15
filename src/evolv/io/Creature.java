@@ -1,6 +1,8 @@
 package evolv.io;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import processing.core.PFont;
 
@@ -63,13 +65,11 @@ class Creature extends SoftBody {
 
 	NameGenerator nameGenerator;
 
-	private static CreatureAction CreatureActionAdjustHue = new CreatureAction.AdjustHue();
-	private static CreatureAction CreatureActionAccelerate = new CreatureAction.Accelerate();
-	private static CreatureAction CreatureActionRotate = new CreatureAction.Rotate();
-	private static CreatureAction CreatureActionEat = new CreatureAction.Eat();
-	private static CreatureAction CreatureActionFight = new CreatureAction.Fight();
-	private static CreatureAction CreatureActionReproduce = new CreatureAction.Reproduce();
-	private static CreatureAction CreatureActionAdjustMouthHue = new CreatureAction.AdjustMouthHue();
+	private static List<CreatureAction> CreatureActions = Arrays.asList(new CreatureAction.AdjustHue(),
+			new CreatureAction.Accelerate(), new CreatureAction.Rotate(), new CreatureAction.Eat(),
+			new CreatureAction.Fight(), new CreatureAction.Reproduce(), new CreatureAction.None(),
+			new CreatureAction.None(), new CreatureAction.None(), new CreatureAction.None(),
+			new CreatureAction.AdjustMouthHue());
 
 	public Creature(EvolvioColor evolvioColor, Board tb) {
 		this(evolvioColor, evolvioColor.random(0, tb.boardWidth), evolvioColor.random(0, tb.boardHeight), 0, 0,
@@ -132,13 +132,9 @@ class Creature extends SoftBody {
 
 		if (useOutput) {
 			double[] output = brain.outputs();
-			CreatureActionAdjustHue.doAction(this, output[0], timeStep);
-			CreatureActionAccelerate.doAction(this, output[1], timeStep);
-			CreatureActionRotate.doAction(this, output[2], timeStep);
-			CreatureActionEat.doAction(this, output[3], timeStep);
-			CreatureActionFight.doAction(this, output[4], timeStep);
-			CreatureActionReproduce.doAction(this, output[5], timeStep);
-			CreatureActionAdjustMouthHue.doAction(this, output[10], timeStep);
+			for (int i = 0; i < output.length; i++) {
+				CreatureActions.get(i).doAction(this, output[i], timeStep);
+			}
 		}
 	}
 

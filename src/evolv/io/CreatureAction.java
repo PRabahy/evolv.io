@@ -3,7 +3,7 @@ package evolv.io;
 public interface CreatureAction {
 
 	public void doAction(Creature creature, double modifier, double timeStep);
-	
+
 	public class Accelerate implements CreatureAction {
 
 		@Override
@@ -11,7 +11,7 @@ public interface CreatureAction {
 			creature.accelerate(amount, timeStep);
 		}
 	}
-	
+
 	public class AdjustHue implements CreatureAction {
 
 		@Override
@@ -19,7 +19,7 @@ public interface CreatureAction {
 			creature.setHue(Math.abs(modifier) % 1.0f);
 		}
 	}
-	
+
 	public class AdjustMouthHue implements CreatureAction {
 
 		@Override
@@ -28,7 +28,7 @@ public interface CreatureAction {
 		}
 
 	}
-	
+
 	public class Eat implements CreatureAction {
 
 		@Override
@@ -36,16 +36,24 @@ public interface CreatureAction {
 			creature.eat(attemptedAmount, timeStep);
 		}
 	}
-	
+
 	public class Fight implements CreatureAction {
 
 		@Override
 		public void doAction(Creature creature, double amount, double timeStep) {
-			timeStep *= 100; //Why??? I just copied this over during a refactor.
-			creature.fight(amount, timeStep);	
+			timeStep *= 100; // Why??? I just copied this over during a
+								// refactor.
+			creature.fight(amount, timeStep);
 		}
 	}
-	
+
+	public class None implements CreatureAction {
+
+		@Override
+		public void doAction(Creature creature, double modifier, double timeStep) {
+		}
+	}
+
 	public class Reproduce implements CreatureAction {
 
 		@Override
@@ -64,7 +72,7 @@ public interface CreatureAction {
 			creature.reproduce(babySize, timeStep);
 		}
 	}
-	
+
 	public class Rotate implements CreatureAction {
 
 		@Override
