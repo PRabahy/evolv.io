@@ -31,6 +31,7 @@ public class Board {
 	private final List<Creature> creatures = new ArrayList<Creature>();
 	private final Creature[] list = new Creature[Configuration.LIST_SLOTS];
 	private float spawnChance = Configuration.SPAWN_CHANCE;
+	private float reuseExistingChance = Configuration.SPAWN_REUSE_CHANCE;
 	private Creature selectedCreature;
 	private int creatureIDUpTo;
 	private int sortMetric;
@@ -200,7 +201,7 @@ public class Board {
 			 * actions
 			 */
 			String[] buttonTexts = { "Brain Control",
-					"Spawn Chance " + EvolvioColor.nf(spawnChance, 0, 2) + "%", "Screenshot now",
+					"Spawn Chance " + EvolvioColor.nf((float) spawnChance, 0, 2) + "%", "Screenshot now",
 					"-   Image every " + EvolvioColor.nf((float) imageSaveInterval, 0, 2) + " years   +",
 					"Text file now",
 					"-    Text every " + EvolvioColor.nf((float) textSaveInterval, 0, 2) + " years    +",
@@ -215,7 +216,6 @@ public class Board {
 				this.evolvioColor.fill(buttonColor);
 				this.evolvioColor.rect(x, y, 220, 40);
 				if (i >= 2 && i < 6) {
-					// TODO can pow be replaced with something faster?
 					double flashAlpha = 1.0f
 							* Math.pow(0.5f, (year - fileSaveTimes[i - 2]) * Configuration.FLASH_SPEED);
 					this.evolvioColor.fill(0, 0, 1, (float) flashAlpha);
@@ -358,19 +358,19 @@ public class Board {
 		 * for(int x = 0; x < boardWidth; x++) { for(int y = 0; y < boardHeight;
 		 * y++) { tiles[x][y].iterate(this, year); } }
 		 */
-		for (int i = 0; i < creatures.size(); i++) {
-			creatures.get(i).setPreviousEnergy();
+		for (Creature creature : creatures) {
+			creature.setPreviousEnergy();
 		}
 		/*
 		 * for(int i = 0; i < rocks.size(); i++) {
 		 * rocks.get(i).collide(timeStep*OBJECT_TIMESTEPS_PER_YEAR); }
 		 */
-		randomSpawnCreature(false);
+		randomSpawnCreature();
 		for (int i = 0; i < creatures.size(); i++) {
 			Creature me = creatures.get(i);
-			me.collide(timeStep);
-			me.metabolize(timeStep);
-			me.useBrain(timeStep, !userControl);
+			if (!userControl) {
+				me.iterate(timeStep);
+			}
 			if (userControl) {
 				if (me == selectedCreature) {
 					if (this.evolvioColor.keyPressed) {
@@ -416,12 +416,12 @@ public class Board {
 	}
 
 	private void finishIterate(double timeStep) {
-		for (int i = 0; i < rocks.size(); i++) {
-			rocks.get(i).applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
+		for (SoftBody rock : rocks) {
+			rock.applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
 		}
-		for (int i = 0; i < creatures.size(); i++) {
-			creatures.get(i).applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
-			creatures.get(i).see();
+		for (Creature creature : creatures) {
+			creature.applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
+			creature.see();
 		}
 		if (Math.floor(fileSaveTimes[1] / imageSaveInterval) != Math.floor(year / imageSaveInterval)) {
 			prepareForFileSave(1);
@@ -547,9 +547,9 @@ public class Board {
 
 	}
 
-	private void randomSpawnCreature(boolean choosePreexisting) {
+	private void randomSpawnCreature() {
 		if (this.evolvioColor.random(0, 1) < spawnChance) {
-			if (choosePreexisting) {
+			if (this.evolvioColor.random(0, 1) < reuseExistingChance) {
 				Creature c = getRandomCreature();
 				c.addEnergy(Configuration.SAFE_SIZE);
 				c.reproduce(Configuration.SAFE_SIZE, timeStep);
