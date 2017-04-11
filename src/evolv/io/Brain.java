@@ -1,9 +1,11 @@
 package evolv.io;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Brain {
 	private static final int BRAIN_HEIGHT = Configuration.NUM_EYES * 3 + Configuration.MEMORY_COUNT + 6;
+	private static final int BRAIN_HIDDEN_NODES = BRAIN_HEIGHT;
 	private static final String[] INPUT_LABELS = new String[BRAIN_HEIGHT];
 	private static final String[] OUTPUT_LABELS = new String[7];
 	static final float NEURON_SPACING = 1.1f;
@@ -15,17 +17,21 @@ public class Brain {
 	private final Axon[][][] axons;
 	private final double[][] neurons;
 
+	private List<BrainInput> inputs = new ArrayList<>();
+	private List<HiddenNode> hiddenNodes = new ArrayList<>();
+	private List<BrainOutput> outputs = new ArrayList<>();
+
 	static {
 		// input
 		INPUT_LABELS[0] = "Size";
 		INPUT_LABELS[1] = "M Hue";
-		
+
 		for (int i = 2; i < Configuration.NUM_EYES * 3 + 2; i += 3) {
 			INPUT_LABELS[i] = "Hue " + i / 3;
 			INPUT_LABELS[i + 1] = "Sat " + ((i - 1) / 3);
 			INPUT_LABELS[i + 2] = "Bri " + ((i - 1) / 3);
 		}
-		
+
 		// output
 		OUTPUT_LABELS[0] = "Body Hue";
 		OUTPUT_LABELS[1] = "Accelerate";
@@ -34,7 +40,7 @@ public class Brain {
 		OUTPUT_LABELS[4] = "Fight";
 		OUTPUT_LABELS[5] = "Procreate";
 		OUTPUT_LABELS[6] = "Mouth Hue";
-		
+
 		// TODO do we need a memory and const output?
 
 		// memory
@@ -45,6 +51,35 @@ public class Brain {
 		// TODO is this the bias?
 		// const
 		INPUT_LABELS[BRAIN_HEIGHT - 1] = "Const.";
+	}
+
+	public Brain(EvolvioColor evolvioColor, List<CreatureSensor> sensors, List<CreatureAction> actions) {
+		this.evolvioColor = evolvioColor;
+		neurons = null;
+		axons = null;
+
+		for (CreatureSensor sensor : sensors) {
+			this.inputs.add(new BrainInput(sensor));
+		}
+
+		for (CreatureAction action : actions) {
+			this.outputs.add(new BrainOutput(action));
+		}
+
+		for (int i = 0; i < BRAIN_HIDDEN_NODES; i++) {
+			HiddenNode hiddenNode = new HiddenNode();
+			this.hiddenNodes.add(hiddenNode);
+
+			for (BrainInput input : inputs) {
+				double weight = Math.random() * 2 - 1;
+				hiddenNode.addSender(input, weight);
+			}
+
+			for (BrainOutput output : outputs) {
+				double weight = Math.random() * 2 - 1;
+				hiddenNode.addReceiver(output, weight);
+			}
+		}
 	}
 
 	public Brain(EvolvioColor evolvioColor, Axon[][][] tbrain, double[][] tneurons) {
@@ -118,14 +153,17 @@ public class Brain {
 		this.evolvioColor.fill(0, 0, 1);
 		for (int y = 0; y < INPUT_LABELS.length; y++) {
 			this.evolvioColor.textAlign(EvolvioColor.RIGHT);
-			if (INPUT_LABELS[y] != null) this.evolvioColor.text(INPUT_LABELS[y], (-neuronSize - 0.1f) * scaleUp + NEURON_OFFSET_X,
-					(y + (neuronSize * 0.6f)) * scaleUp + NEURON_OFFSET_Y);
+			if (INPUT_LABELS[y] != null)
+				this.evolvioColor.text(INPUT_LABELS[y], (-neuronSize - 0.1f) * scaleUp + NEURON_OFFSET_X,
+						(y + (neuronSize * 0.6f)) * scaleUp + NEURON_OFFSET_Y);
 		}
 		for (int y = 0; y < OUTPUT_LABELS.length; y++) {
 			this.evolvioColor.textAlign(EvolvioColor.LEFT);
-			if (OUTPUT_LABELS[y] != null) this.evolvioColor.text(OUTPUT_LABELS[y],
-					(Configuration.BRAIN_WIDTH - 1 + neuronSize + 0.5f) * scaleUp * NEURON_SPACING + NEURON_OFFSET_X,
-					(y + (neuronSize * 0.6f)) * scaleUp + NEURON_OFFSET_Y);
+			if (OUTPUT_LABELS[y] != null)
+				this.evolvioColor.text(OUTPUT_LABELS[y],
+						(Configuration.BRAIN_WIDTH - 1 + neuronSize + 0.5f) * scaleUp * NEURON_SPACING
+								+ NEURON_OFFSET_X,
+						(y + (neuronSize * 0.6f)) * scaleUp + NEURON_OFFSET_Y);
 		}
 		this.evolvioColor.textAlign(EvolvioColor.CENTER);
 		for (int x = 0; x < Configuration.BRAIN_WIDTH; x++) {
@@ -141,7 +179,7 @@ public class Brain {
 						(y + (neuronSize * 0.6f)) * scaleUp + NEURON_OFFSET_Y);
 			}
 		}
-		
+
 		if (mX >= 0 && mX < Configuration.BRAIN_WIDTH && mY >= 0 && mY < BRAIN_HEIGHT) {
 			for (int y = 0; y < BRAIN_HEIGHT; y++) {
 				if (mX >= 1 && mY < BRAIN_HEIGHT - 1) {

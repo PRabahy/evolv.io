@@ -415,12 +415,12 @@ public class Board {
 	}
 
 	private void finishIterate(double timeStep) {
-		for (int i = 0; i < rocks.size(); i++) {
-			rocks.get(i).applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
+		for (SoftBody rock : rocks) {
+			rock.applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
 		}
-		for (int i = 0; i < creatures.size(); i++) {
-			creatures.get(i).applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
-			creatures.get(i).see();
+		for (Creature creature : creatures) {
+			creature.applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
+			creature.see();
 		}
 		if (Math.floor(fileSaveTimes[1] / imageSaveInterval) != Math.floor(year / imageSaveInterval)) {
 			prepareForFileSave(1);

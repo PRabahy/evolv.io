@@ -256,13 +256,15 @@ public class Creature extends SoftBody {
 		}
 	}
 
-	public void see() {
+	public  double[] see() {
 		for (int k = 0; k < Configuration.NUM_EYES; k++) {
-			eyes.get(k).see();;
+			eyes.get(k).see();
 			visionResults[k * 3] = eyes.get(k).getEyeResult().hue;
 			visionResults[k * 3 + 1] = eyes.get(k).getEyeResult().saturation;
 			visionResults[k * 3 + 2] = eyes.get(k).getEyeResult().brightness;
 		}
+		
+		return visionResults;
 	}
 
 	public double distance(double x1, double y1, double x2, double y2) {
