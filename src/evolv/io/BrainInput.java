@@ -1,17 +1,14 @@
 package evolv.io;
 
-public class BrainInput implements BrainSender {
+import evolv.io.BrainSender.AbstractBrainSender;
+
+public class BrainInput extends AbstractBrainSender {
 
 	private final CreatureSensor input;
 	private double lastValue = Double.NaN;
 
 	public BrainInput(CreatureSensor input) {
 		this.input = input;
-	}
-
-	@Override
-	public void addReceiver(BrainReceiver receiver, double weight) {
-		receivers.put(receiver, weight);
 	}
 
 	public double GetNewValue() {
