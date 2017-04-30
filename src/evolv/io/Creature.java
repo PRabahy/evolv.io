@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Creature extends SoftBody {
-	private static final List<CreatureAction> CREATURE_ACTIONS = Arrays.asList(new CreatureAction.AdjustHue(),
-			new CreatureAction.Accelerate(), new CreatureAction.Rotate(), new CreatureAction.Eat(),
-			new CreatureAction.Fight(), new CreatureAction.Reproduce(), new CreatureAction.AdjustMouthHue());
+	private final List<CreatureAction> CREATURE_ACTIONS = Arrays.asList(new CreatureAction.AdjustHue(this),
+			new CreatureAction.Accelerate(this), new CreatureAction.Rotate(this), new CreatureAction.Eat(this),
+			new CreatureAction.Fight(this), new CreatureAction.Reproduce(this), new CreatureAction.AdjustMouthHue(this));
 
 	private final EvolvioColor evolvioColor;
 

@@ -112,7 +112,9 @@ public class Brain {
 	}
 	
 	public void iterate(double timeStep) {
-		
+		for (BrainOutput output : outputs) {
+			output.iterate(timeStep);
+		}
 	}
 
 	public Brain evolve(List<Creature> parents) {

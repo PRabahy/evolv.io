@@ -2,60 +2,96 @@ package evolv.io;
 
 public interface CreatureAction {
 
-	public void doAction(Creature creature, double modifier, double timeStep);
+	public void doAction(double modifier, double timeStep);
+	
+	public abstract class AbstractCreatureAction implements CreatureAction {
+		final Creature creature;
+		
+		public AbstractCreatureAction(Creature creature) {
+			this.creature = creature;
+		}
+	}
 
-	public class Accelerate implements CreatureAction {
+	public class Accelerate extends AbstractCreatureAction {
+
+		public Accelerate(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double amount, double timeStep) {
+		public void doAction(double amount, double timeStep) {
 			creature.accelerate(amount, timeStep);
 		}
 	}
 
-	public class AdjustHue implements CreatureAction {
+	public class AdjustHue extends AbstractCreatureAction {
+		
+		public AdjustHue(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double modifier, double timeStep) {
+		public void doAction(double modifier, double timeStep) {
 			creature.setHue(Math.abs(modifier) % 1.0f);
 		}
 	}
 
-	public class AdjustMouthHue implements CreatureAction {
+	public class AdjustMouthHue extends AbstractCreatureAction {
+
+		public AdjustMouthHue(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double modifier, double timeStep) {
+		public void doAction(double modifier, double timeStep) {
 			creature.setMouthHue(Math.abs(modifier) % 1.0f);
 		}
 
 	}
 
-	public class Eat implements CreatureAction {
+	public class Eat extends AbstractCreatureAction {
+
+		public Eat(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double attemptedAmount, double timeStep) {
+		public void doAction(double attemptedAmount, double timeStep) {
 			creature.eat(attemptedAmount, timeStep);
 		}
 	}
 
-	public class Fight implements CreatureAction {
+	public class Fight extends AbstractCreatureAction {
+
+		public Fight(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double amount, double timeStep) {
+		public void doAction(double amount, double timeStep) {
 			creature.fight(amount, timeStep);
 		}
 	}
 
-	public class None implements CreatureAction {
+	public class None extends AbstractCreatureAction {
+
+		public None(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double modifier, double timeStep) {
+		public void doAction(double modifier, double timeStep) {
 		}
 	}
 
-	public class Reproduce implements CreatureAction {
+	public class Reproduce extends AbstractCreatureAction {
+
+		public Reproduce(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double modifier, double timeStep) {
+		public void doAction(double modifier, double timeStep) {
 			if (modifier <= 0) {
 				return; // This creature doesn't want to reproduce
 			}
@@ -71,10 +107,14 @@ public interface CreatureAction {
 		}
 	}
 
-	public class Rotate implements CreatureAction {
+	public class Rotate extends AbstractCreatureAction {
+
+		public Rotate(Creature creature) {
+			super(creature);
+		}
 
 		@Override
-		public void doAction(Creature creature, double amount, double timeStep) {
+		public void doAction(double amount, double timeStep) {
 			creature.rotate(amount, timeStep);
 		}
 	}

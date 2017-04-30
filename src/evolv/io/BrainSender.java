@@ -6,12 +6,19 @@ import java.util.Map;
 public interface BrainSender {
 	public void addReceiver(BrainReceiver receiver, double weight);
 	
+	public double getWeight();
+	
 	abstract class AbstractBrainSender implements BrainSender {
 		final Map<BrainReceiver, Double> receivers = new HashMap<>();
 		
 		@Override
 		public void addReceiver(BrainReceiver receiver, double weight) {
 			receivers.put(receiver, weight);
+		}
+		
+		@Override
+		public double getWeight() {
+			return 0;//TODO: fixme
 		}
 	}
 }

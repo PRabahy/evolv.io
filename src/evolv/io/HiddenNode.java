@@ -12,4 +12,9 @@ public class HiddenNode implements BrainSender, BrainReceiver {
 	public void addSender(BrainSender sender, double weight) {
 		sender.addReceiver(this, weight);
 	}
+
+	@Override
+	public double getWeight() {
+		return 0; // TODO FIXME
+	}
 }

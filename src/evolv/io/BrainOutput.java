@@ -9,4 +9,8 @@ public class BrainOutput extends AbstractBrainReceiver {
 	public BrainOutput(CreatureAction output) {
 		this.output = output;
 	}
+	
+	public void iterate(double timeStep) {
+		output.doAction(getWeight(), timeStep);
+	}
 }

@@ -14,5 +14,14 @@ public interface BrainReceiver {
 			senders.put(sender, weight);
 
 		}
+		
+		double getWeight() {
+			double toReturn = 0;
+			for (Map.Entry<BrainSender, Double> sender : senders.entrySet()) {
+				toReturn += sender.getKey().getWeight() * sender.getValue();
+			}
+			toReturn /= senders.size();
+			return toReturn;
+		}
 	}
 }
