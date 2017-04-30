@@ -31,6 +31,7 @@ public class Board {
 	private final List<Creature> creatures = new ArrayList<Creature>();
 	private final Creature[] list = new Creature[Configuration.LIST_SLOTS];
 	private float spawnChance = Configuration.SPAWN_CHANCE;
+	private float reuseExistingChance = Configuration.SPAWN_REUSE_CHANCE;
 	private Creature selectedCreature;
 	private int creatureIDUpTo;
 	private int sortMetric;
@@ -357,19 +358,19 @@ public class Board {
 		 * for(int x = 0; x < boardWidth; x++) { for(int y = 0; y < boardHeight;
 		 * y++) { tiles[x][y].iterate(this, year); } }
 		 */
-		for (int i = 0; i < creatures.size(); i++) {
-			creatures.get(i).setPreviousEnergy();
+		for (Creature creature : creatures) {
+			creature.setPreviousEnergy();
 		}
 		/*
 		 * for(int i = 0; i < rocks.size(); i++) {
 		 * rocks.get(i).collide(timeStep*OBJECT_TIMESTEPS_PER_YEAR); }
 		 */
-		randomSpawnCreature(false);
+		randomSpawnCreature();
 		for (int i = 0; i < creatures.size(); i++) {
 			Creature me = creatures.get(i);
-			me.collide(timeStep);
-			me.metabolize(timeStep);
-			me.useBrain(timeStep, !userControl);
+			if (!userControl) {
+				me.iterate(timeStep);
+			}
 			if (userControl) {
 				if (me == selectedCreature) {
 					if (this.evolvioColor.keyPressed) {
@@ -546,9 +547,9 @@ public class Board {
 
 	}
 
-	private void randomSpawnCreature(boolean choosePreexisting) {
+	private void randomSpawnCreature() {
 		if (this.evolvioColor.random(0, 1) < spawnChance) {
-			if (choosePreexisting) {
+			if (this.evolvioColor.random(0, 1) < reuseExistingChance) {
 				Creature c = getRandomCreature();
 				c.addEnergy(Configuration.SAFE_SIZE);
 				c.reproduce(Configuration.SAFE_SIZE, timeStep);

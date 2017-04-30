@@ -59,4 +59,28 @@ public interface CreatureSensor {
 			return eye.getEyeResult().saturation;
 		}
 	}
+	
+	public class CreatureEnergySensor extends AbstractCreatureSensor {
+		
+		public CreatureEnergySensor(Creature creature) {
+			super(creature);
+		}
+
+		@Override
+		public double sense() {
+			return creature.getEnergy();
+		}
+	}
+	
+	public class CreatureMouthHueSensor extends AbstractCreatureSensor {
+		
+		public CreatureMouthHueSensor(Creature creature) {
+			super(creature);
+		}
+
+		@Override
+		public double sense() {
+			return creature.getMouthHue();
+		}
+	}
 }

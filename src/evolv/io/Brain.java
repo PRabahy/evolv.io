@@ -110,6 +110,10 @@ public class Brain {
 			neurons = tneurons;
 		}
 	}
+	
+	public void iterate(double timeStep) {
+		
+	}
 
 	public Brain evolve(List<Creature> parents) {
 		int parentsTotal = parents.size();

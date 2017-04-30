@@ -46,10 +46,6 @@ public class Creature extends SoftBody {
 		super(evolvioColor, board, tpx, tpy, tvx, tvy, tenergy, tdensity, thue, tsaturation, tbrightness);
 		this.evolvioColor = evolvioColor;
 
-		if (brain == null) {
-			brain = new Brain(this.evolvioColor, null, null);
-		}
-		this.brain = brain;
 		this.rotation = rot;
 		this.vr = tvr;
 		this.id = board.getCreatureIdUpTo() + 1;
@@ -66,6 +62,20 @@ public class Creature extends SoftBody {
 				eyes.add(new Eye(evolvioColor, this, teyeAngles[i], teyeDistances[i]));
 			}
 		}
+		
+		List<CreatureSensor> sensors = new ArrayList<>();
+		for (Eye eye : eyes) {
+			sensors.add(new CreatureSensor.SeeHue(this, eye));
+			sensors.add(new CreatureSensor.SeeBrightness(this, eye));
+			sensors.add(new CreatureSensor.SeeSaturation(this, eye));
+		}
+		sensors.add(new CreatureSensor.CreatureEnergySensor(this));
+		sensors.add(new CreatureSensor.CreatureMouthHueSensor(this));
+		
+		if (brain == null) {
+			brain = new Brain(this.evolvioColor, sensors, CREATURE_ACTIONS);
+		}
+		this.brain = brain;
 	}
 
 	private String createName(String tname, boolean mutateName) {
@@ -82,21 +92,10 @@ public class Creature extends SoftBody {
 		brain.draw(scaleUp, mX, mY);
 	}
 
-	public void useBrain(double timeStep, boolean useOutput) {
-		double inputs[] = new double[Configuration.NUM_EYES * 3 + 2];
-		for (int i = 0; i < Configuration.NUM_EYES * 3; i++) {
-			inputs[i] = visionResults[i];
-		}
-		inputs[Configuration.NUM_EYES * 3] = getEnergy();
-		inputs[Configuration.NUM_EYES * 3 + 1] = mouthHue;
-		brain.input(inputs);
-
-		if (useOutput) {
-			double[] output = brain.outputs();
-			for (int i = 0; i < CREATURE_ACTIONS.size(); i++) {
-				CREATURE_ACTIONS.get(i).doAction(this, output[i], timeStep);
-			}
-		}
+	public void iterate(double timeStep) {
+		collide(timeStep);
+		metabolize(timeStep);
+		brain.iterate(timeStep);
 	}
 
 	public void drawSoftBody(float scaleUp, float camZoom, boolean showVision) {
