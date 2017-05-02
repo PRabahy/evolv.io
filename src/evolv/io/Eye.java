@@ -36,7 +36,7 @@ public class Eye {
 
 	public void see() {
 		
-		creature.dropEnergy(.01 * distance);
+		creature.loseEnergy(.01 * distance);
 		
 		Point2D visionStart = creature.getPoint2D();
 		double visionTotalAngle = creature.getRotation() + angle;
