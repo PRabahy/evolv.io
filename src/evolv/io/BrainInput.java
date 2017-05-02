@@ -24,6 +24,6 @@ public class BrainInput extends AbstractBrainSender {
 	}
 	
 	public String getLabel() {
-		return input.toString();
+		return input.getClass().getSimpleName();
 	}
 }

@@ -15,6 +15,6 @@ public class BrainOutput extends AbstractBrainReceiver {
 	}
 	
 	public String getLabel() {
-		return output.toString();
+		return output.getClass().getSimpleName();
 	}
 }
