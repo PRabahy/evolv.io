@@ -6,6 +6,8 @@ import java.util.Map;
 public interface BrainReceiver {
 	public void addSender(BrainSender sender, double weight);
 	
+	public double getWeight();
+
 	abstract class AbstractBrainReceiver implements BrainReceiver {
 		final Map<BrainSender, Double> senders = new HashMap<>();
 		
@@ -15,13 +17,13 @@ public interface BrainReceiver {
 
 		}
 		
-		double getWeight() {
-			double toReturn = 0;
+		@Override
+		public double getWeight() {
+			double total = 0;
 			for (Map.Entry<BrainSender, Double> sender : senders.entrySet()) {
-				toReturn += sender.getKey().getWeight() * sender.getValue();
+				total += sender.getKey().getWeight() * sender.getValue();
 			}
-			toReturn /= senders.size();
-			return toReturn;
+			return total / senders.size();
 		}
 	}
 }

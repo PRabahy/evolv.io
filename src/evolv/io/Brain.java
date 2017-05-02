@@ -118,31 +118,8 @@ public class Brain {
 	}
 
 	public Brain evolve(List<Creature> parents) {
-		int parentsTotal = parents.size();
-		Axon[][][] newBrain = new Axon[Configuration.BRAIN_WIDTH - 1][BRAIN_HEIGHT][BRAIN_HEIGHT - 1];
-		double[][] newNeurons = new double[Configuration.BRAIN_WIDTH][BRAIN_HEIGHT];
-		float randomParentRotation = this.evolvioColor.random(0, 1);
-		for (int x = 0; x < Configuration.BRAIN_WIDTH - 1; x++) {
-			for (int y = 0; y < BRAIN_HEIGHT; y++) {
-				for (int z = 0; z < BRAIN_HEIGHT - 1; z++) {
-					float axonAngle = EvolvioColor.atan2((y + z) / 2.0f - BRAIN_HEIGHT / 2.0f,
-							x - Configuration.BRAIN_WIDTH / 2) / (2 * EvolvioColor.PI) + EvolvioColor.PI;
-					Brain parentForAxon = parents
-							.get((int) (((axonAngle + randomParentRotation) % 1.0f) * parentsTotal)).getBrain();
-					newBrain[x][y][z] = parentForAxon.axons[x][y][z].mutateAxon();
-				}
-			}
-		}
-		for (int x = 0; x < Configuration.BRAIN_WIDTH; x++) {
-			for (int y = 0; y < BRAIN_HEIGHT; y++) {
-				float axonAngle = EvolvioColor.atan2(y - BRAIN_HEIGHT / 2.0f, x - Configuration.BRAIN_WIDTH / 2)
-						/ (2 * EvolvioColor.PI) + EvolvioColor.PI;
-				Brain parentForAxon = parents.get((int) (((axonAngle + randomParentRotation) % 1.0f) * parentsTotal))
-						.getBrain();
-				newNeurons[x][y] = parentForAxon.neurons[x][y];
-			}
-		}
-		return new Brain(this.evolvioColor, newBrain, newNeurons);
+		// TODO Real implementation
+		return null;
 	}
 
 	public void draw(float scaleUp, int mX, int mY) {
@@ -198,49 +175,12 @@ public class Brain {
 		}
 	}
 
-	public void input(double[] inputs) {
-		int end = Configuration.BRAIN_WIDTH - 1;
-		for (int i = 0; i < Configuration.NUM_EYES * 3 + 2; i++) {
-			neurons[0][i] = inputs[i];
-		}
-		for (int i = 0; i < Configuration.MEMORY_COUNT; i++) {
-			neurons[0][Configuration.NUM_EYES * 3 + 2 + i] = neurons[end][Configuration.NUM_EYES * 3 + 2 + i];
-		}
-		neurons[0][BRAIN_HEIGHT - 1] = 1;
-		for (int x = 1; x < Configuration.BRAIN_WIDTH; x++) {
-			for (int y = 0; y < BRAIN_HEIGHT - 1; y++) {
-				double total = 0;
-				for (int input = 0; input < BRAIN_HEIGHT; input++) {
-					total += neurons[x - 1][input] * axons[x - 1][input][y].getWeight();
-				}
-				if (x == Configuration.BRAIN_WIDTH - 1) {
-					neurons[x][y] = total;
-				} else {
-					neurons[x][y] = sigmoid(total);
-				}
-			}
-		}
-	}
-
-	public double[] outputs() {
-		int end = Configuration.BRAIN_WIDTH - 1;
-		double[] output = new double[7];
-		for (int i = 0; i < output.length; i++) {
-			output[i] = neurons[end][i];
-		}
-		return output;
-	}
-
 	private void drawAxon(int x1, int y1, int x2, int y2, float scaleUp) {
 		this.evolvioColor.stroke(neuronFillColor(axons[x1][y1][y2].getWeight() * neurons[x1][y1]));
 		this.evolvioColor.line(x1 * scaleUp * NEURON_SPACING + NEURON_OFFSET_X, y1 * scaleUp + NEURON_OFFSET_Y,
 				x2 * scaleUp * NEURON_SPACING + NEURON_OFFSET_X, y2 * scaleUp + NEURON_OFFSET_Y);
 	}
-
-	private double sigmoid(double input) {
-		return 1.0f / (1.0f + Math.exp(-input));
-	}
-
+	
 	private int neuronFillColor(double d) {
 		if (d >= 0) {
 			return this.evolvioColor.color(0, 0, 1, (float) (d));

@@ -305,9 +305,9 @@ public class Creature extends SoftBody {
 			for (int i = 0; i < getColliders().size(); i++) {
 				SoftBody possibleParent = getColliders().get(i);
 				/*
-				 * Must be a WILLING creature to also give birth.
+				 * TODO Must be a WILLING creature to also give birth.
 				 */
-				if (possibleParent instanceof Creature && ((Creature) possibleParent).brain.outputs()[5] > -1) {
+				if (possibleParent instanceof Creature) {
 					float distance = EvolvioColor.dist((float) getPx(), (float) getPy(), (float) possibleParent.getPx(),
 							(float) possibleParent.getPy());
 					double combinedRadius = getRadius() * Configuration.FIGHT_RANGE + possibleParent.getRadius();
