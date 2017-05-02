@@ -11,15 +11,19 @@ public class BrainInput extends AbstractBrainSender {
 		this.input = input;
 	}
 
-	public double GetNewValue() {
+	public double getNewValue() {
 		lastValue = input.sense();
 		return lastValue;
 	}
 
-	public double GetLastValue() {
+	public double getLastValue() {
 		if (Double.isNaN(lastValue)) {
-			GetNewValue();
+			getNewValue();
 		}
 		return lastValue;
+	}
+	
+	public String getLabel() {
+		return input.toString();
 	}
 }

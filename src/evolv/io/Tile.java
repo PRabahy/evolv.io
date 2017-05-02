@@ -69,7 +69,7 @@ public class Tile {
 				this.evolvioColor.fill(0, 0, 1, 1);
 			}
 			this.evolvioColor.textAlign(EvolvioColor.CENTER);
-			this.evolvioColor.textSize(21);
+			this.evolvioColor.textSize(17);
 			this.evolvioColor.text(EvolvioColor.nf((float) (100 * foodLevel), 0, 2) + " yums", (posX + 0.5f) * scaleUp,
 					(posY + 0.3f) * scaleUp);
 			this.evolvioColor.text("Clim: " + EvolvioColor.nf((float) (climateType), 0, 2), (posX + 0.5f) * scaleUp,

@@ -13,4 +13,8 @@ public class BrainOutput extends AbstractBrainReceiver {
 	public void iterate(double timeStep) {
 		output.doAction(getWeight(), timeStep);
 	}
+	
+	public String getLabel() {
+		return output.toString();
+	}
 }
