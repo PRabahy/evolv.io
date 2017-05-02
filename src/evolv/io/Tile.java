@@ -1,7 +1,5 @@
 package evolv.io;
 
-import evolv.io.util.MathUtil;
-
 public class Tile {
 	private final EvolvioColor evolvioColor;
 	private final Board board;
@@ -71,7 +69,7 @@ public class Tile {
 				this.evolvioColor.fill(0, 0, 1, 1);
 			}
 			this.evolvioColor.textAlign(EvolvioColor.CENTER);
-			this.evolvioColor.textSize(21);
+			this.evolvioColor.textSize(17);
 			this.evolvioColor.text(EvolvioColor.nf((float) (100 * foodLevel), 0, 2) + " yums", (posX + 0.5f) * scaleUp,
 					(posY + 0.3f) * scaleUp);
 			this.evolvioColor.text("Clim: " + EvolvioColor.nf((float) (climateType), 0, 2), (posX + 0.5f) * scaleUp,
@@ -90,19 +88,15 @@ public class Tile {
 			} else {
 				if (growthChange > 0) {
 					// Food is growing. Exponentially approach maxGrowthLevel.
-					// TODO do we need to use exponential here? is there a
-					// faster alternative?
 					if (foodLevel < Configuration.MAX_GROWTH_LEVEL) {
 						double newDistToMax = (Configuration.MAX_GROWTH_LEVEL - foodLevel)
-								* MathUtil.fastExp(-growthChange * fertility * Configuration.FOOD_GROWTH_RATE);
+								* Math.exp(-growthChange * fertility * Configuration.FOOD_GROWTH_RATE);
 						double foodGrowthAmount = (Configuration.MAX_GROWTH_LEVEL - newDistToMax) - foodLevel;
 						addFood(foodGrowthAmount, climateType, false);
 					}
 				} else {
 					// Food is dying off. Exponentially approach 0.
-					// TODO do we need to use exponential here? is there a
-					// faster alternative?
-					removeFood(foodLevel - foodLevel * MathUtil.fastExp(growthChange * Configuration.FOOD_GROWTH_RATE), false);
+					removeFood(foodLevel - foodLevel * Math.exp(growthChange * Configuration.FOOD_GROWTH_RATE), false);
 				}
 				/*
 				 * if (growableTime > 0) { if (foodLevel < maxGrowthLevel) {
