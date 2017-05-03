@@ -24,7 +24,6 @@ public class BrainInput extends AbstractBrainSender {
 	}
 	
 	public String getLabel() {
-<<<<<<< HEAD
 		String label = input.getClass().getSimpleName();
 		
 		if (label.equals("SeeHue")) label = "Hue";
@@ -33,8 +32,5 @@ public class BrainInput extends AbstractBrainSender {
 		if (label.equals("CreatureEnergySensor")) label = "Energy";
 		if (label.equals("CreatureMouthHueSensor")) label = "M Hue";
 		return label;
-=======
-		return input.getClass().getSimpleName();
->>>>>>> 6b0f8b4710f08505a438796e093befcf8b971e94
 	}
 }
