@@ -15,10 +15,5 @@ public interface BrainSender {
 		public void addReceiver(BrainReceiver receiver, double weight) {
 			receivers.put(receiver, weight);
 		}
-		
-		@Override
-		public double getWeight() {
-			return 0;//TODO: fixme
-		}
 	}
 }

@@ -79,13 +79,13 @@ public class Brain {
 				this.evolvioColor.text(input.getLabel(), (-neuronSize) * scaleUp + NEURON_OFFSET_X,
 						(yIndex + (neuronSize * 0.45f)) * scaleUp + NEURON_OFFSET_Y);
 				
-				this.evolvioColor.fill(neuronFillColor(input.getLastValue()));
+				this.evolvioColor.fill(neuronFillColor(input.getWeight()));
 				this.evolvioColor.ellipse(xIndex * scaleUp * NEURON_SPACING + NEURON_OFFSET_X + 15,
 						yIndex * scaleUp + NEURON_OFFSET_Y, neuronSize * scaleUp, neuronSize * scaleUp);
 				
-				this.evolvioColor.fill(neuronTextColor(input.getLastValue()));
+				this.evolvioColor.fill(neuronTextColor(input.getWeight()));
 				this.evolvioColor.textAlign(EvolvioColor.CENTER);
-				this.evolvioColor.text(EvolvioColor.nf((float) input.getLastValue(), 0, 1),
+				this.evolvioColor.text(EvolvioColor.nf((float) input.getWeight(), 0, 1),
 						xIndex * scaleUp * NEURON_SPACING + NEURON_OFFSET_X + 15,
 						(yIndex + (neuronSize * 0.45f)) * scaleUp + NEURON_OFFSET_Y);
 				
@@ -93,7 +93,7 @@ public class Brain {
 			}
 			
 		}
-		xIndex = 1;
+		xIndex++;
 		yIndex = 0;
 		for (HiddenNode hiddenNode : hiddenNodes) {
 			this.evolvioColor.textAlign(EvolvioColor.CENTER);
@@ -108,7 +108,7 @@ public class Brain {
 			
 			yIndex++;
 			}
-		xIndex = 2;
+		xIndex++;
 		yIndex = 0;
 		for (BrainOutput output : outputs) {
 			if (output != null) {

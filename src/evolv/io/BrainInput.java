@@ -6,6 +6,8 @@ public class BrainInput extends AbstractBrainSender {
 
 	private final CreatureSensor input;
 	private double lastValue = Double.NaN;
+	
+	private long cachedIteration = 0;
 
 	public BrainInput(CreatureSensor input) {
 		this.input = input;
@@ -16,8 +18,8 @@ public class BrainInput extends AbstractBrainSender {
 		return lastValue;
 	}
 
-	public double getLastValue() {
-		if (Double.isNaN(lastValue)) {
+	public double getWeight() {
+		if (Double.isNaN(lastValue) && cachedIteration != Board.iterationStep) {
 			getNewValue();
 		}
 		return lastValue;

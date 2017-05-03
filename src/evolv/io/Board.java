@@ -25,6 +25,7 @@ public class Board {
 	private final int randomSeed;
 	// Board
 	private final Tile[][] tiles = new Tile[Configuration.BOARD_WIDTH][Configuration.BOARD_HEIGHT];
+	public static long iterationStep = 0;
 
 	// Creature
 	private final List<SoftBody>[][] softBodiesInPositions = new List[Configuration.BOARD_WIDTH][Configuration.BOARD_HEIGHT];
@@ -334,6 +335,7 @@ public class Board {
 	}
 
 	public void iterate(double timeStep) {
+		iterationStep++;
 		double prevYear = year;
 		year += timeStep;
 		if (Math.floor(year / Configuration.RECORD_POPULATION_EVERY) != Math
