@@ -15,6 +15,10 @@ public class BrainOutput extends AbstractBrainReceiver {
 	}
 	
 	public String getLabel() {
-		return output.getClass().getSimpleName();
+		String label = output.getClass().getSimpleName();
+		
+		if (label.equals("AdjustHue")) label = "Body Hue";
+		if (label.equals("AdjustMouthHue")) label = "Mouth Hue";
+		return label;
 	}
 }
