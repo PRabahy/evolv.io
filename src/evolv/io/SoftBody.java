@@ -226,8 +226,8 @@ public class SoftBody {
 		return brightness;
 	}
 
-	public void setHue(double hue) {
-		this.hue = Math.min(Math.max(hue, 0), 1);
+	public void adjustHue(double hue) {
+		this.hue = (this.hue + hue) % 1.0;
 	}
 
 	public void setSaturation(double saturation) {

@@ -25,7 +25,7 @@ public class Board {
 	private final int randomSeed;
 	// Board
 	private final Tile[][] tiles = new Tile[Configuration.BOARD_WIDTH][Configuration.BOARD_HEIGHT];
-	public static long iterationStep = 0;
+	public volatile static long iterationStep = 0;
 
 	// Creature
 	private final List<SoftBody>[][] softBodiesInPositions = new List[Configuration.BOARD_WIDTH][Configuration.BOARD_HEIGHT];
@@ -393,14 +393,14 @@ public class Board {
 							if (this.evolvioColor.key == 'f' || this.evolvioColor.key == 'F')
 								me.fight(0.5f, timeStep * Configuration.TIMESTEPS_PER_YEAR);
 							if (this.evolvioColor.key == 'u' || this.evolvioColor.key == 'U')
-								me.setHue(me.getHue() + 0.02f);
+								me.adjustHue(me.getHue() + 0.02f);
 							if (this.evolvioColor.key == 'j' || this.evolvioColor.key == 'J')
-								me.setHue(me.getHue() - 0.02f);
+								me.adjustHue(me.getHue() - 0.02f);
 
 							if (this.evolvioColor.key == 'i' || this.evolvioColor.key == 'I')
-								me.setMouthHue(me.getMouthHue() + 0.02f);
+								me.adjustMouthHue(me.getMouthHue() + 0.02f);
 							if (this.evolvioColor.key == 'k' || this.evolvioColor.key == 'K')
-								me.setMouthHue(me.getMouthHue() - 0.02f);
+								me.adjustMouthHue(me.getMouthHue() - 0.02f);
 							if (this.evolvioColor.key == 'b' || this.evolvioColor.key == 'B') {
 								if (!isPressingKeyB) {
 									me.reproduce(Configuration.MANUAL_BIRTH_SIZE, timeStep);
@@ -411,6 +411,7 @@ public class Board {
 							}
 						}
 					}
+					me.iterate(timeStep);
 				}
 			}
 		}
@@ -423,7 +424,6 @@ public class Board {
 		}
 		for (Creature creature : creatures) {
 			creature.applyMotions(timeStep * Configuration.TIMESTEPS_PER_YEAR);
-			creature.see();
 		}
 		if (Math.floor(fileSaveTimes[1] / imageSaveInterval) != Math.floor(year / imageSaveInterval)) {
 			prepareForFileSave(1);

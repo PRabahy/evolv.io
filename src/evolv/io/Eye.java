@@ -17,12 +17,13 @@ public class Eye {
 	private double visionOccludedX;
 	private double visionOccludedY;
 
-	private final EyeResult eyeResult;
+	private final EyeResult eyeResult = new EyeResult();
 
 	public class EyeResult {
 		public double hue;
 		public double saturation;
 		public double brightness;
+		public long iterationStep;
 	}
 
 	public Eye(EvolvioColor evolvioColor, Creature creature, double angle, double distance) {
@@ -30,13 +31,17 @@ public class Eye {
 		this.evolvioColor = evolvioColor;
 		this.angle = angle;
 		this.distance = distance;
-
-		eyeResult = new EyeResult();
 	}
 
-	public void see() {
+	public EyeResult see() {
 		
 		//creature.loseEnergy(.01 * distance);
+		
+		if (eyeResult.iterationStep == Board.iterationStep) {
+			return eyeResult;
+		}
+		
+		eyeResult.iterationStep = Board.iterationStep;
 		
 		Point2D visionStart = creature.getPoint2D();
 		double visionTotalAngle = creature.getRotation() + angle;
@@ -78,11 +83,13 @@ public class Eye {
 				}
 			}
 		}
+		
+		return eyeResult;
 	}
 
 	public void drawVisionAngle(float scaleUp) {
 		int visionUIcolor = this.evolvioColor.color(0, 0, 1);
-		if (getEyeResult().brightness > Configuration.BRIGHTNESS_THRESHOLD) {
+		if (eyeResult.brightness > Configuration.BRIGHTNESS_THRESHOLD) {
 			visionUIcolor = this.evolvioColor.color(0, 0, 0);
 		}
 		this.evolvioColor.stroke(visionUIcolor);
@@ -95,8 +102,8 @@ public class Eye {
 		this.evolvioColor.fill(visionUIcolor);
 		this.evolvioColor.ellipse((float) (visionOccludedX * scaleUp), (float) (visionOccludedY * scaleUp),
 				2 * CROSS_SIZE * scaleUp, 2 * CROSS_SIZE * scaleUp);
-		this.evolvioColor.stroke((float) (getEyeResult().hue), (float) (getEyeResult().saturation),
-				(float) (getEyeResult().brightness));
+		this.evolvioColor.stroke((float) (eyeResult.hue), (float) (eyeResult.saturation),
+				(float) (eyeResult.brightness));
 		this.evolvioColor.strokeWeight(Configuration.CREATURE_STROKE_WEIGHT);
 		this.evolvioColor.line((float) ((visionOccludedX - CROSS_SIZE) * scaleUp),
 				(float) ((visionOccludedY - CROSS_SIZE) * scaleUp), (float) ((visionOccludedX + CROSS_SIZE) * scaleUp),
@@ -151,9 +158,5 @@ public class Eye {
 	private double getVisionEndY() {
 		double visionTotalAngle = creature.getRotation() + angle;
 		return creature.getPy() + distance * Math.sin(visionTotalAngle);
-	}
-
-	public EyeResult getEyeResult() {
-		return eyeResult;
 	}
 }

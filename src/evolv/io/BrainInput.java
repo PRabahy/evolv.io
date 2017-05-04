@@ -15,11 +15,12 @@ public class BrainInput extends AbstractBrainSender {
 
 	public double getNewValue() {
 		lastValue = input.sense();
+		cachedIteration = Board.iterationStep;
 		return lastValue;
 	}
 
 	public double getWeight() {
-		if (Double.isNaN(lastValue) && cachedIteration != Board.iterationStep) {
+		if (Double.isNaN(lastValue) || cachedIteration != Board.iterationStep) {
 			getNewValue();
 		}
 		return lastValue;

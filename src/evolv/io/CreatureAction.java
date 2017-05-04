@@ -32,7 +32,7 @@ public interface CreatureAction {
 
 		@Override
 		public void doAction(double modifier, double timeStep) {
-			creature.setHue(Math.abs(modifier) % 1.0f);
+			creature.adjustHue(Math.abs(modifier) % 1.0f);
 		}
 	}
 
@@ -44,7 +44,7 @@ public interface CreatureAction {
 
 		@Override
 		public void doAction(double modifier, double timeStep) {
-			creature.setMouthHue(Math.abs(modifier) % 1.0f);
+			creature.adjustMouthHue(Math.abs(modifier) % 1.0f);
 		}
 
 	}

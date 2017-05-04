@@ -23,8 +23,7 @@ public interface CreatureSensor {
 
 		@Override
 		public double sense() {
-			eye.see();
-			return eye.getEyeResult().hue;
+			return eye.see().hue;
 		}
 	}
 	
@@ -39,8 +38,7 @@ public interface CreatureSensor {
 
 		@Override
 		public double sense() {
-			eye.see();
-			return eye.getEyeResult().brightness;
+			return eye.see().brightness;
 		}
 	}
 	
@@ -55,8 +53,7 @@ public interface CreatureSensor {
 
 		@Override
 		public double sense() {
-			eye.see();
-			return eye.getEyeResult().saturation;
+			return eye.see().saturation;
 		}
 	}
 	
